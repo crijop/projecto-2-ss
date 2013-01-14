@@ -21,7 +21,6 @@ class Test(object):
     def __call__(self):
         global isTest
         isTest = True
-        print isTest
         self.function()
         isTest = False
         pass
@@ -30,19 +29,24 @@ class Test(object):
 
 
 def assertEqualsPy(expected, actual):
+    mensage = ""
     if isTest == True:
         if not type(expected) == type(actual):
-            print "false"
+            mensage += "O tipo das variáveis inseridas não é igual"
+            print mensage
             return False
         else:
             if expected == actual:
-                print "true"
+                mensage += "O Valor do AssertEqualsPY está correcto"
+                print mensage
                 return True
             else:
-                print "false 2"
+                mensage += "O Valor do AssertEqualsPY está errado"
+                print mensage
                 return False
     else:
-        
+        mensage += "Não se verifica um teste (@Test)"
+        print mensage
         print "não é teeste"
                 
             

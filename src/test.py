@@ -13,10 +13,9 @@ dir()
 def primeiroTeste():
     
     i = 5
-    
-    print "teste", assertEqualsPy("vgh", i)
+    assertEqualsPy(5, i)
     pass
     
     
-#primeiroTeste()
+primeiroTeste()
     
