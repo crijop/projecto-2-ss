@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 '''
 Created on 2013/01/14
 
@@ -6,15 +7,43 @@ Created on 2013/01/14
 
 
 
+isTest = False
+        
+    
+
+
+class Test(object):
+    
+    def __init__(self, function):
+        self.function = function
+        pass
+    
+    def __call__(self):
+        global isTest
+        isTest = True
+        print isTest
+        self.function()
+        isTest = False
+        pass
+    
+
 
 
 def assertEqualsPy(expected, actual):
-    if not type(expected) == type(actual):
-        print "false"
-        return False
+    if isTest == True:
+        if not type(expected) == type(actual):
+            print "false"
+            return False
+        else:
+            if expected == actual:
+                print "true"
+                return True
+            else:
+                print "false 2"
+                return False
     else:
-        print "vrdd"
-        return True
+        
+        print "não é teeste"
+                
+            
 
-assertEqualsPy(1, "oala") 
-    
