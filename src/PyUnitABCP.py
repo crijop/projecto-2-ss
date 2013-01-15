@@ -4,6 +4,8 @@ Created on 2013/01/14
 
 @author: admin1
 '''
+from inspect import getframeinfo, currentframe
+import inspect
 
 
 
@@ -31,20 +33,20 @@ def assertEqualsPy(expected, actual):
     if isTest == True:
         if not type(expected) == type(actual):
             mensage += "O tipo das variáveis inseridas não é igual"
-            print mensage
+            print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
             return False
         else:
             if expected == actual:
                 mensage += "O Valor do AssertEqualsPY está correcto"
-                print mensage
+                print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 return True
             else:
                 mensage += "O Valor do AssertEqualsPY está errado"
-                print mensage
+                print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 return False
     else:
         mensage += "Não se verifica um teste (@Test)"
-        print mensage
+        print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
         pass
     pass
                 
@@ -54,22 +56,22 @@ def assertTruePy(condition):
         if type(condition) == bool:
             if condition == True:
                 mensage += "A variavél é verdadeira"
-                print mensage
+                print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 return True
             else:
                 mensage += "A variavél é falsa"
-                print mensage
+                print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 return False
             pass
         else:
             mensage += "A variavél não é do tipo Booleana"
-            print mensage
+            print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
             return False
             pass
         pass
     else:
         mensage += "Não se verifica um teste (@Test)"
-        print mensage
+        print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
         pass
     pass
 
@@ -79,22 +81,22 @@ def assertFalsePy(condition):
         if type(condition) == bool:
             if condition == False:
                 mensage += "A variavél é Falsa"
-                print mensage
+                print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 return True
             else:
                 mensage += "A variavél é Verdadeira"
-                print mensage
+                print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 return False
             pass
         else:
             mensage += "A variavél não é do tipo Booleana"
-            print mensage
+            print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
             return False
             pass
         pass
     else:
         mensage += "Não se verifica um teste (@Test)"
-        print mensage
+        print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
         pass
             
     
