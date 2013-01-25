@@ -58,17 +58,23 @@ class TestStatus():
  
 class PyUniti(object):
     
+    #global ola
+    ola = "SOU SELF OLAAAAAAAAAAAAA"
+    failsList = []
+    failsListPossition = 0
+    #beginTest(classObject)
+    
     class Test(object):
     
         def __init__(self, function):
             self.function = function
-            print "fazer Teste"
+            #print "fazer Teste"
             self.__call__()
             pass
         
         def __call__(self):
             
-            print "fazer Teste CALL"
+            #print "fazer Teste CALL"
             global isTest
             isTest = True
             #failsList.append(TestStatus(self.function.__name__))
@@ -78,22 +84,35 @@ class PyUniti(object):
         
     
     def __init__(self, classObject):
-        self.failsList = []
-        self.failsListPossition = 0
+        #self.failsList = []
+        #self.failsListPossition = 0
         self.beginTest(classObject)
+        
+        pass
+    
+    
+    def get_failList(self):
+        return self.failsList
+        pass
+    
+    @staticmethod
+    def set_failList():
+        #global ola
+        print "OLa sou set", PyUniti.ola
         pass
     
     def beginTest(self, classObject ):
         for name in dir(classObject):
             attribute = getattr(classObject, name)
             if ismethod(attribute):
-                attribute(self)
+                attribute()
     
     class UnitiTests(object):
         
         '''
         AssertFalsePy
         '''
+        
         def assertFalsePy(self, condition):
             mensage = ""
             if isTest == True:
@@ -121,68 +140,69 @@ class PyUniti(object):
             '''
             AssertTruePy
             '''
-            def assertTruePy(self, condition):
-                mensage = ""
-                if isTest == True:
-                    if type(condition) == bool:
-                        if condition == True:
-                            mensage += "A variavél é verdadeira"
-                            print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                            return True
-                        else:
-                            mensage += "A variavél é falsa"
-                            print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                            return False
-                        pass
+        def assertTruePy(self, condition):
+            mensage = ""
+            if isTest == True:
+                if type(condition) == bool:
+                    if condition == True:
+                        mensage += "A variavél é verdadeira"
+                        print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                        return True
                     else:
-                        mensage += "A variavél não é do tipo Booleana"
+                        mensage += "A variavél é falsa"
                         print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                         return False
-                        pass
                     pass
                 else:
-                    mensage += "Não se verifica um teste (@Test)"
+                    mensage += "A variavél não é do tipo Booleana"
                     print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                    return False
                     pass
                 pass
-            '''
-            AssertEqualsPy
-            '''
-            def assertEqualsPy(self, expected, actual):
-                mensage = ""
-                status = False
-                lineNumber = None
-                if isTest == True:
-                    if not type(expected) == type(actual):
-                        mensage += "O tipo das variáveis inseridas não é igual"
+            else:
+                mensage += "Não se verifica um teste (@Test)"
+                print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                pass
+            pass
+        '''
+        AssertEqualsPy
+        '''
+        @staticmethod
+        def assertEqualsPy(expected, actual):
+            mensage = ""
+            status = False
+            lineNumber = None
+            if isTest == True:
+                if not type(expected) == type(actual):
+                    mensage += "O tipo das variáveis inseridas não é igual"
+                    lineNumber = inspect.currentframe().f_back.f_lineno
+                    #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                    status = False
+                else:
+                    if expected == actual:
+                        mensage += "O Valor do AssertEqualsPY está correcto"
+                        lineNumber = inspect.currentframe().f_back.f_lineno
+                        #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                        status = True
+                    else:
+                        mensage += "O Valor do AssertEqualsPY está errado"
                         lineNumber = inspect.currentframe().f_back.f_lineno
                         #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                         status = False
-                    else:
-                        if expected == actual:
-                            mensage += "O Valor do AssertEqualsPY está correcto"
-                            lineNumber = inspect.currentframe().f_back.f_lineno
-                            #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                            status = True
-                        else:
-                            mensage += "O Valor do AssertEqualsPY está errado"
-                            lineNumber = inspect.currentframe().f_back.f_lineno
-                            #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                            status = False
-                    
-                    global failsList
-                    global failsListPossition
-                    failsList[failsListPossition].addTest(self.AssertEqualsPy(expected, actual, lineNumber, status))
-                else:
-            
-                    print "não é teeste"
-                 
-                    mensage += "Não se verifica um teste (@Test)"
-                    print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                    pass
                 
-                
+                global failsList
+                PyUniti.set_failList()
+                #PyUniti.failsList[PyUniti.failsListPossition].addTest(PyUniti.AssertEqualsPy(expected, actual, lineNumber, status))
+            else:
+        
+                print "não é teeste"
+             
+                mensage += "Não se verifica um teste (@Test)"
+                print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 pass
+            
+            
+            pass
             
         class AssertEqualsPy(object):
     

@@ -8,20 +8,20 @@ Created on 14 de Jan de 2013
 from PyUnitABCP import *
 
 
-class testar(PyUniti.UnitiTests):
+class testar():
     
     @PyUniti.Test
     def primeiroTeste(self):    
         i = 5
     
-        print "teste", self.assertEqualsPy("vgh", i)
+        print "teste", PyUniti.UnitiTests.assertEqualsPy("vgh", i)
     
         array = [1, 2, 4]
         i = "carlos"
         a = 1
-        self.assertEqualsPy("carlos", i)
-        self.assertEqualsPy(1, a)
-        self.assertEqualsPy(array, [1, 2, 4, 4])
+        #self.assertEqualsPy("carlos", i)
+        #self.assertEqualsPy(1, a)
+        #self.assertEqualsPy(array, [1, 2, 4, 4])
     
         pass
     
@@ -32,13 +32,13 @@ class testar(PyUniti.UnitiTests):
     def segundoTeste(self):
         print "KO"
         var = True
-        self.assertTruePy(var)
+        #self.assertTruePy(var)
         pass
     
     @PyUniti.Test
     def terceiroTeste(self):
         var = False
-        self.assertFalsePy(var)
+        #self.assertFalsePy(var)
         pass
 
 if __name__ == "__main__":
