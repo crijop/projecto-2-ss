@@ -59,7 +59,7 @@ class TestStatus():
 class PyUniti(object):
     
     #global ola
-    ola = "SOU SELF OLAAAAAAAAAAAAA"
+    #ola = "SOU SELF OLAAAAAAAAAAAAA"
     failsList = []
     failsListPossition = 0
     #beginTest(classObject)
@@ -98,7 +98,7 @@ class PyUniti(object):
     @staticmethod
     def set_failList():
         #global ola
-        print "OLa sou set", PyUniti.ola
+        #print "OLa sou set", PyUniti.ola
         pass
     
     def beginTest(self, classObject ):
@@ -112,8 +112,8 @@ class PyUniti(object):
         '''
         AssertFalsePy
         '''
-        
-        def assertFalsePy(self, condition):
+        @staticmethod
+        def assertFalsePy(condition):
             mensage = ""
             if isTest == True:
                 if type(condition) == bool:
@@ -137,10 +137,11 @@ class PyUniti(object):
                 print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 pass
             
-            '''
-            AssertTruePy
-            '''
-        def assertTruePy(self, condition):
+        '''
+        AssertTruePy
+        '''
+        @staticmethod    
+        def assertTruePy(condition):
             mensage = ""
             if isTest == True:
                 if type(condition) == bool:
@@ -171,13 +172,13 @@ class PyUniti(object):
         def assertEqualsPy(expected, actual):
             mensage = ""
             status = False
-            lineNumber = None
+            #lineNumber = None
             if isTest == True:
                 if not type(expected) == type(actual):
                     mensage += "O tipo das variáveis inseridas não é igual"
                     lineNumber = inspect.currentframe().f_back.f_lineno
                     #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                    status = False
+                    #status = False
                 else:
                     if expected == actual:
                         mensage += "O Valor do AssertEqualsPY está correcto"
@@ -190,8 +191,8 @@ class PyUniti(object):
                         #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                         status = False
                 
-                global failsList
-                PyUniti.set_failList()
+                #global failsList
+                #PyUniti.set_failList()
                 #PyUniti.failsList[PyUniti.failsListPossition].addTest(PyUniti.AssertEqualsPy(expected, actual, lineNumber, status))
             else:
         
