@@ -19,11 +19,11 @@ class testar():
         array = [1, 2, 4]
         i = "carlos"
         a = 1
-        '''
+       
         PyUniti.UnitiTests.assertEqualsPy("carlos", i)
         PyUniti.UnitiTests.assertEqualsPy(1, a)
         PyUniti.UnitiTests.assertEqualsPy(array, [1, 2, 4, 4])
-        '''
+        
         pass
     
         

@@ -36,20 +36,7 @@ def getFails():
         
     return failsList'''
 
-class TestStatus():
-    def __init__(self, functionName):
-        self.testList = []
-        self.functionName = functionName
-        
-    def addTest(self, test):
-        self.testList.append(test)
-        
-    def addFunctionName(self, functionName):
-        self.functionName = functionName
-        pass
-    def getTestList(self):
-        
-        return self.testList
+
     
 
 
@@ -61,7 +48,7 @@ class PyUniti(object):
     #global ola
     #ola = "SOU SELF OLAAAAAAAAAAAAA"
     failsList = []
-    failsListPossition = 0
+    failsListPosition = 0
     #beginTest(classObject)
     
     class Test(object):
@@ -75,11 +62,13 @@ class PyUniti(object):
         def __call__(self):
             
             #print "fazer Teste CALL"
+            
             global isTest
             isTest = True
-            #failsList.append(TestStatus(self.function.__name__))
+            PyUniti.failsList.append(PyUniti.TestStatus(self.function.__name__))
             self.function(self)
             isTest = False
+            PyUniti.failsListPosition += 1
             pass
         
     
@@ -87,6 +76,8 @@ class PyUniti(object):
         #self.failsList = []
         #self.failsListPossition = 0
         self.beginTest(classObject)
+        
+        print "Teste linha", PyUniti.failsList[1].getTestList()[0].getLineNumber()
         
         pass
     
@@ -106,6 +97,22 @@ class PyUniti(object):
             attribute = getattr(classObject, name)
             if ismethod(attribute):
                 attribute()
+                
+                
+    class TestStatus():
+        def __init__(self, functionName):
+            self.testList = []
+            self.functionName = functionName
+            
+        def addTest(self, test):
+            self.testList.append(test)
+            
+        def addFunctionName(self, functionName):
+            self.functionName = functionName
+            pass
+        def getTestList(self):
+            
+            return self.testList
     
     class UnitiTests(object):
         
@@ -115,21 +122,29 @@ class PyUniti(object):
         @staticmethod
         def assertFalsePy(condition):
             mensage = ""
+            status = False
+            lineNumber = None
             if isTest == True:
                 if type(condition) == bool:
                     if condition == False:
                         mensage += "A variavél é Falsa"
                         print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                        return True
+                        lineNumber = inspect.currentframe().f_back.f_lineno
+                        status = True
+                       
                     else:
                         mensage += "A variavél é Verdadeira"
                         print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                        return False
+                        lineNumber = inspect.currentframe().f_back.f_lineno
+                        status = False
+                        
                     pass
                 else:
                     mensage += "A variavél não é do tipo Booleana"
                     print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                    return False
+                    lineNumber = inspect.currentframe().f_back.f_lineno
+                    status = False
+                    
                     pass
                 pass
             else:
@@ -137,34 +152,55 @@ class PyUniti(object):
                 print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 pass
             
+            print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
+            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertTruePy(condition, lineNumber, status))
+            print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
+            pass
+            
         '''
         AssertTruePy
         '''
         @staticmethod    
         def assertTruePy(condition):
             mensage = ""
+            status = False
+            lineNumber = None
             if isTest == True:
                 if type(condition) == bool:
                     if condition == True:
                         mensage += "A variavél é verdadeira"
                         print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                        return True
+                        lineNumber = inspect.currentframe().f_back.f_lineno
+                        status = True
+                        
                     else:
                         mensage += "A variavél é falsa"
                         print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                        return False
+                        lineNumber = inspect.currentframe().f_back.f_lineno
+                        status = False
+                        
                     pass
                 else:
                     mensage += "A variavél não é do tipo Booleana"
                     print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                    return False
+                    lineNumber = inspect.currentframe().f_back.f_lineno
+                    status = False
+                    
                     pass
-                pass
+                
+           
+                
             else:
                 mensage += "Não se verifica um teste (@Test)"
                 print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 pass
+            
+            
+            print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
+            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertTruePy(condition, lineNumber, status))
+            print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
             pass
+           
         '''
         AssertEqualsPy
         '''
@@ -172,7 +208,7 @@ class PyUniti(object):
         def assertEqualsPy(expected, actual):
             mensage = ""
             status = False
-            #lineNumber = None
+            lineNumber = None
             if isTest == True:
                 if not type(expected) == type(actual):
                     mensage += "O tipo das variáveis inseridas não é igual"
@@ -190,6 +226,8 @@ class PyUniti(object):
                         lineNumber = inspect.currentframe().f_back.f_lineno
                         #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                         status = False
+                        
+            
                 
                 #global failsList
                 #PyUniti.set_failList()
@@ -202,6 +240,9 @@ class PyUniti(object):
                 print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 pass
             
+            print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
+            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertEqualsPy(expected, actual, lineNumber, status))
+            print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
             
             pass
             
@@ -231,6 +272,52 @@ class PyUniti(object):
             
             
             pass
+        
+        class AssertTruePy(object):
+    
+            def __init__(self, condition, lineNumber, status):
+                self.condition = condition
+                self.lineNumber = lineNumber
+                self.status = status
+                
+            def getCondition(self):
+                
+                return self.condition
+            
+            def getLineNumber(self):
+                
+                return self.lineNumber
+            
+            def getStatus(self):
+                
+                return self.status
+            
+            
+            pass
+        
+        class AssertFalsePy(object):
+    
+            def __init__(self, condition, lineNumber, status):
+                self.condition = condition
+                self.lineNumber = lineNumber
+                self.status = status
+                
+            def getCondition(self):
+                
+                return self.condition
+            
+            def getLineNumber(self):
+                
+                return self.lineNumber
+            
+            def getStatus(self):
+                
+                return self.status
+            
+            
+            pass
+                       
+                           
                                     
                                 
                             
