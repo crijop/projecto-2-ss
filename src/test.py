@@ -8,7 +8,7 @@ Created on 14 de Jan de 2013
 from PyUnitABCP import *
 
 
-class testar():
+class PTestes():
     
     @PyUniti.Test
     def primeiroTeste(self):    
@@ -26,9 +26,6 @@ class testar():
         
         pass
     
-        
-    
-    
     @PyUniti.Test
     def segundoTeste(self):
         print "\nSegundo Teste, faz o assertTruePy"
@@ -42,9 +39,19 @@ class testar():
         var = False
         PyUniti.UnitiTests.assertFalsePy(var)
         pass
+    
+
+    @PyUniti.Test
+    def quartoTeste(self):
+        print "\nTerceiro Teste, faz o assertFalsePy"
+        var = False
+        PyUniti.UnitiTests.assertFalsePy(var)
+        pass
+    pass
+pass
 
 if __name__ == "__main__":
-    PyUniti(testar())
+    PyUniti()
     pass
 
 
