@@ -29,12 +29,14 @@ class PyUnitiABCP(wx.Frame):
         self.panel_1 = wx.Panel(self.notebook_1_pane_2, -1)
         self.label_1 = wx.StaticText(self.panel_1, -1, "Resultados", style=wx.ALIGN_CENTRE)
         self.panel_2 = wx.Panel(self.notebook_1_pane_2, -1)
+        #self.panel_3 = wx.Panel(self.notebook_1_pane_2, -1)
         self.label_7 = wx.StaticText(self.panel_2, -1, "label_7")
         self.label_8 = wx.StaticText(self.panel_2, -1, "label_8")
         self.label_9 = wx.StaticText(self.panel_2, -1, "label_9")
         self.label_10 = wx.StaticText(self.panel_2, -1, "label_10")
+        
         self.panel_3 = wx.Panel(self.panel_2, -1)
-        self.button_1 = wx.Button(self.panel_2, -1, "Sair")
+        #self.button_1 = wx.Button(self.panel_2, -1, "Sair")
 
         self.__set_properties()
         
@@ -65,7 +67,7 @@ class PyUnitiABCP(wx.Frame):
         sizer_1 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_3 = wx.BoxSizer(wx.VERTICAL)
-        sizer_8 = wx.BoxSizer(wx.VERTICAL)
+        self.sizer_8 = wx.BoxSizer(wx.VERTICAL)
         sizer_4 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_17 = wx.BoxSizer(wx.HORIZONTAL)
         sizer_23 = wx.BoxSizer(wx.VERTICAL)
@@ -96,14 +98,18 @@ class PyUnitiABCP(wx.Frame):
         sizer_4.Add(self.label_1, 0, wx.ALIGN_CENTER_HORIZONTAL, 11)
         self.panel_1.SetSizer(sizer_4)
         sizer_3.Add(self.panel_1, 0, wx.EXPAND, 0)
-        sizer_8.Add(self.label_7, 0, 0, 0)
-        sizer_8.Add(self.label_8, 0, 0, 0)
-        sizer_8.Add(self.label_9, 0, 0, 0)
-        sizer_8.Add(self.label_10, 0, 0, 0)
-        sizer_8.Add(self.panel_3, 1, wx.EXPAND, 0)
-        sizer_8.Add(self.button_1, 0, wx.EXPAND, 0)
-        self.panel_2.SetSizer(sizer_8)
+        self.sizer_8.Add(self.label_7, 0, 0, 0)
+        self.sizer_8.Add(self.label_8, 0, 0, 0)
+        self.sizer_8.Add(self.label_9, 0, 0, 0)
+        self.sizer_8.Add(self.label_10, 0, 0, 0)
+        
+        
+        
+        self.sizer_8.Add(self.panel_3, 1, wx.EXPAND, 0)
+        #self.sizer_8.Add(self.button_1, 0, wx.EXPAND, 0)
+        self.panel_2.SetSizer(self.sizer_8)
         sizer_3.Add(self.panel_2, 1, wx.EXPAND, 0)
+        #sizer_3.Add(self.panel_3, 1, wx.EXPAND, 0)
         sizer_2.Add(sizer_3, 1, wx.EXPAND, 0)
         self.notebook_1_pane_2.SetSizer(sizer_2)
         self.notebook_1.AddPage(self.notebook_1_pane_1, "Metodos Teste")
@@ -117,10 +123,15 @@ class PyUnitiABCP(wx.Frame):
         
         root = self.tree.AddRoot('Teste')
         for method in failsList:
-            metodo = self.tree.AppendItem(root, '' + str(method.getFunctionName()))
+            
+            classe = wx.TreeItemData()
+            classe.SetData(method)
+            metodo = self.tree.AppendItem(root, '' + str(method.getFunctionName()), -1,-1, classe)
             #metodo.
             for test in method.getTestList():
-                no = self.tree.AppendItem(metodo, '' + "<"+str(test.getLineNumber())+"> " + str(test.getName()))
+                data = wx.TreeItemData()
+                data.SetData(test)
+                no = self.tree.AppendItem(metodo, '' + "<"+str(test.getLineNumber())+"> " + str(test.getName()), -1, -1, data)
                 
             '''
             self.tree.AppendItem(os, 'FreeBSD')
@@ -132,6 +143,27 @@ class PyUnitiABCP(wx.Frame):
             self.tree.AppendItem(cl, 'Java')
             self.tree.AppendItem(cl, 'C++')'''
 
+    def makeEqualsStatistics(self, funcName, expected, actual, lineNumber, name, status):
+        self.sizer_8.Clear(True)
+        
+        self.func = wx.StaticText(self.panel_2, -1, "Método: " + str(funcName))
+        self.type = wx.StaticText(self.panel_2, -1, "\nTipo: " + str(name))
+        self.status = wx.StaticText(self.panel_2, -1, "\n\nEstado: " + str(status))
+        
+        self.sizer_8.Add(self.func, 0, 0, 0)
+        self.sizer_8.Add(self.type, 0, 0, 0)
+        self.sizer_8.Add(self.status, 0, 0, 0)
+        
+        #self.button_1 = wx.Button(self.panel_2, -1, "Sair")
+        #self.sizer_8.Add(self.button_1, 0, wx.EXPAND, 0)
+        #self.panel_2.SetSizer(self.sizer_8)
+        self.panel_2.SetSizer(self.sizer_8)
+        
+        self.Show()
+        pass
+    def makeTrueFalseStatistics(self, funcName, condition, lineNumber, name, status):
+        pass
+        
     def removeTreeElements(self):
         self.tree.DeleteAllItems()
         pass

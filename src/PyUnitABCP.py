@@ -132,8 +132,13 @@ class PyUniti(object):
         
     def selChanged(self, event):  # wxGlade: PyUnitiABCP.<event_handler>
         item =  event.GetItem()
-        print self.frame_1.getTree().GetId(item)
-        event.Skip()
+        parent = self.frame_1.getTree().GetItemParent(item)
+        
+        teste = self.frame_1.getTree().GetPyData(item)
+        classe = self.frame_1.getTree().GetPyData(parent)
+        
+        if teste.getType() == 2:
+            self.frame_1.makeEqualsStatistics(classe.getFunctionName(), teste.getExpected(), teste.getActual(), teste.getLineNumber(), teste.getName(), teste.getStatus())
         
     def get_failList(self):
         return self.failsList
@@ -383,7 +388,7 @@ class PyUniti(object):
                 self.name = "AssertFalse"
                 
             def getType(self):
-                return 4
+                return 3
                 pass
             
             def getName(self):
