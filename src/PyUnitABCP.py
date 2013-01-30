@@ -71,7 +71,7 @@ class PyUniti(object):
         
     
     def __init__(self):
-        print "possst"
+        #print "possst"
         #self.failsList = []
         #self.failsListPossition = 0
         #self.beginTest(classObject)
@@ -82,7 +82,7 @@ class PyUniti(object):
      
         self.frame_1.Show()
         
-        self.frame_1.setMethodsList(PyUniti.methodsList, self.check_Method, self.start_Test, self.selChanged)
+        self.frame_1.setMethodsList(PyUniti.methodsList, self.check_Method, self.start_Test, self.selChanged, self.exitProgram)
         
         self.frame_1.Show()
         app.MainLoop()
@@ -122,7 +122,7 @@ class PyUniti(object):
                 PyUniti.methodsList[pos](self)
                 
                 PyUniti.failsListPosition += 1
-                print "olaa"
+                #print "olaa"
         
         self.frame_1.makeTree(PyUniti.failsList)
         self.frame_1.Show()
@@ -130,6 +130,13 @@ class PyUniti(object):
         
         event.Skip()
         
+    def exitProgram(self, event):  # wxGlade: PyUnitiABCP.<event_handler>
+        if wx.MessageBox("Deseja sair do programa?", "Confirmar", wx.YES_NO) == wx.YES :
+            #print "sair"
+            exit(0)
+            pass
+        #event.Skip()
+            
     def selChanged(self, event):  # wxGlade: PyUnitiABCP.<event_handler>
         item =  event.GetItem()
         parent = self.frame_1.getTree().GetItemParent(item)
@@ -137,8 +144,20 @@ class PyUniti(object):
         teste = self.frame_1.getTree().GetPyData(item)
         classe = self.frame_1.getTree().GetPyData(parent)
         
-        if teste.getType() == 2:
-            self.frame_1.makeEqualsStatistics(classe.getFunctionName(), teste.getExpected(), teste.getActual(), teste.getLineNumber(), teste.getName(), teste.getStatus())
+        if classe == None:
+            isFail = 0
+            for testes in teste.getTestList():
+                if testes.getStatus() == False:
+                    isFail += 1
+                    
+            
+            self.frame_1.makeMethodStatistics(teste.getFunctionName(), isFail)
+            
+            
+        elif teste.getType() == 2:
+            self.frame_1.makeEqualsStatistics(classe.getFunctionName(), teste.getExpected(), teste.getExpectedType(), teste.getActual(), teste.getActualType(), teste.getLineNumber(), teste.getName(), teste.getStatus(), teste.getFailMensage())
+        elif teste.getType() == 3:
+            self.frame_1.makeTrueFalseStatistics(classe.getFunctionName(), teste.getCondition(), teste.getLineNumber(), teste.getName(), teste.getStatus(), teste.getFailMensage())    
         
     def get_failList(self):
         return self.failsList
@@ -156,7 +175,7 @@ class PyUniti(object):
             if ismethod(attribute):
                 PyUniti.methodsList.append(attribute)
                 attribute()
-                print "nada"
+                #print "nada"
                 
                 
     class TestStatus():
@@ -195,20 +214,20 @@ class PyUniti(object):
             if type(condition) == bool:
                 if condition == False:
                     mensage += "A variavél é Falsa"
-                    print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                    #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                     lineNumber = inspect.currentframe().f_back.f_lineno
                     status = True
                    
                 else:
                     mensage += "A variavél é Verdadeira"
-                    print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                    #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                     lineNumber = inspect.currentframe().f_back.f_lineno
                     status = False
                     
                 pass
             else:
                 mensage += "A variavél não é do tipo Booleana"
-                print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 lineNumber = inspect.currentframe().f_back.f_lineno
                 status = False
                 
@@ -220,7 +239,7 @@ class PyUniti(object):
                 #pass
             
             #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
-            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertFalsePy(condition, lineNumber, status))
+            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertFalsePy(condition, lineNumber, status, mensage))
             #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
             pass
             
@@ -236,20 +255,20 @@ class PyUniti(object):
             if type(condition) == bool:
                 if condition == True:
                     mensage += "A variavél é verdadeira"
-                    print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                    #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                     lineNumber = inspect.currentframe().f_back.f_lineno
                     status = True
                     
                 else:
                     mensage += "A variavél é falsa"
-                    print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                    #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                     lineNumber = inspect.currentframe().f_back.f_lineno
                     status = False
                     
                 pass
             else:
                 mensage += "A variavél não é do tipo Booleana"
-                print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 lineNumber = inspect.currentframe().f_back.f_lineno
                 status = False
                     
@@ -264,7 +283,7 @@ class PyUniti(object):
             
             
             #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
-            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertTruePy(condition, lineNumber, status))
+            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertTruePy(condition, lineNumber, status, mensage))
             #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
             pass
            
@@ -274,6 +293,8 @@ class PyUniti(object):
         @staticmethod
         def assertEqualsPy(expected, actual):
             mensage = ""
+            expectedType = str(type(expected))
+            actualType = str(type(actual))
             status = False
             lineNumber = None
             #if isTest == True:
@@ -308,19 +329,36 @@ class PyUniti(object):
                 #pass
             
             #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
-            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertEqualsPy(expected, actual, lineNumber, status))
+            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertEqualsPy(expected, actual, expectedType, actualType, lineNumber, status, mensage))
             #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
             
             pass
             
         class AssertEqualsPy(object):
     
-            def __init__(self, expected, actual, lineNumber, status):
+            def __init__(self, expected, actual, expectedType, actualType, lineNumber, status, failMensage):
                 self.expected = expected
                 self.actual = actual
+                self.expectedType = expectedType
+                self.actualType = actualType
                 self.lineNumber = lineNumber
                 self.status = status
                 self.name = "AssertEquals"
+                self.failMensage = failMensage
+                
+            
+            def getFailMensage(self):
+                #print self.failMensage
+                return self.failMensage
+                pass
+            
+            def getExpectedType(self):
+                return self.expectedType
+                pass
+            
+            def getActualType(self):
+                return self.actualType
+                pass
             
             def getType(self):
                 return 2
@@ -340,21 +378,28 @@ class PyUniti(object):
             def getLineNumber(self):
                 
                 return self.lineNumber
+                pass
             
             def getStatus(self):
                 
                 return self.status
-            
+                pass
             
             pass
         
         class AssertTruePy(object):
     
-            def __init__(self, condition, lineNumber, status):
+            def __init__(self, condition, lineNumber, status, failMensage):
                 self.condition = condition
                 self.lineNumber = lineNumber
                 self.status = status
                 self.name = "AssertTrue"
+                self.failMensage = failMensage
+            
+            def getFailMensage(self):
+                
+                return self.failMensage
+                pass
             
             def getType(self):
                 return 3
@@ -381,12 +426,17 @@ class PyUniti(object):
         
         class AssertFalsePy(object):
     
-            def __init__(self, condition, lineNumber, status):
+            def __init__(self, condition, lineNumber, status, failMensage):
                 self.condition = condition
                 self.lineNumber = lineNumber
                 self.status = status
                 self.name = "AssertFalse"
+                self.failMensage = failMensage
+            
+            def getFailMensage(self):
                 
+                return self.failMensage
+                pass
             def getType(self):
                 return 3
                 pass

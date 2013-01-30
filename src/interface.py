@@ -19,21 +19,22 @@ class PyUnitiABCP(wx.Frame):
         self.panel_7 = wx.Panel(self.panel_6, -1)
         self.all_metodos_box = wx.CheckBox(self.panel_7, -1, "")
         self.label_4 = wx.StaticText(self.panel_7, -1, "Metodos a executar")
+        self.label_4.SetForegroundColour('White')
         #self.checkbox_13 = wx.CheckBox(self.panel_6, -1, "checkbox_13")
         #self.checkbox_14 = wx.CheckBox(self.panel_6, -1, "checkbox_14")
         self.button_5 = wx.Button(self.notebook_1_pane_1, -1, "Iniciar Teste")
         self.panel_9 = wx.Panel(self.notebook_1_pane_1, -1)
-        self.button_6 = wx.Button(self.notebook_1_pane_1, -1, "Saida")
+        self.button_6 = wx.Button(self.notebook_1_pane_1, -1, "Sair")
         self.notebook_1_pane_2 = wx.Panel(self.notebook_1, -1)
         self.tree = wx.TreeCtrl(self.notebook_1_pane_2, -1, style=wx.TR_HAS_BUTTONS | wx.TR_DEFAULT_STYLE | wx.SUNKEN_BORDER)
         self.panel_1 = wx.Panel(self.notebook_1_pane_2, -1)
         self.label_1 = wx.StaticText(self.panel_1, -1, "Resultados", style=wx.ALIGN_CENTRE)
-        self.panel_2 = wx.Panel(self.notebook_1_pane_2, -1)
+        self.label_1.SetForegroundColour('White')
+        self.panel_2 = wx.ScrolledWindow(self.notebook_1_pane_2, -1, style=wx.TAB_TRAVERSAL)
+        
         #self.panel_3 = wx.Panel(self.notebook_1_pane_2, -1)
-        self.label_7 = wx.StaticText(self.panel_2, -1, "label_7")
-        self.label_8 = wx.StaticText(self.panel_2, -1, "label_8")
-        self.label_9 = wx.StaticText(self.panel_2, -1, "label_9")
-        self.label_10 = wx.StaticText(self.panel_2, -1, "label_10")
+        self.label_7 = wx.StaticText(self.panel_2, -1, "Sem Resultados")
+        
         
         self.panel_3 = wx.Panel(self.panel_2, -1)
         #self.button_1 = wx.Button(self.panel_2, -1, "Sair")
@@ -47,16 +48,17 @@ class PyUnitiABCP(wx.Frame):
         
         #self.Bind(wx.EVT_BUTTON, self.exitProgram, self.button_6)
         
-        #self.Bind(wx.EVT_BUTTON, self.exitProgram, self.button_1)
+        
         # end wxGlade
 
     def __set_properties(self):
         # begin wxGlade: PyUnitiABCP.__set_properties
-        self.SetTitle("frame_1")
-        self.SetSize((450, 317))
+        self.SetTitle("PyUnitiABCP")
+        self.SetSize((550, 400))
         self.label_4.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.panel_7.SetBackgroundColour(wx.Colour(50, 153, 204))
         self.panel_6.SetScrollRate(10, 10)
+        self.panel_2.SetScrollRate(10, 10)
         self.tree.SetMinSize((225, 276))
         self.label_1.SetFont(wx.Font(14, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, ""))
         self.panel_1.SetBackgroundColour(wx.Colour(50, 153, 204))
@@ -99,9 +101,9 @@ class PyUnitiABCP(wx.Frame):
         self.panel_1.SetSizer(sizer_4)
         sizer_3.Add(self.panel_1, 0, wx.EXPAND, 0)
         self.sizer_8.Add(self.label_7, 0, 0, 0)
-        self.sizer_8.Add(self.label_8, 0, 0, 0)
-        self.sizer_8.Add(self.label_9, 0, 0, 0)
-        self.sizer_8.Add(self.label_10, 0, 0, 0)
+        #self.sizer_8.Add(self.label_8, 0, 0, 0)
+        #self.sizer_8.Add(self.label_9, 0, 0, 0)
+        #self.sizer_8.Add(self.label_10, 0, 0, 0)
         
         
         
@@ -143,16 +145,47 @@ class PyUnitiABCP(wx.Frame):
             self.tree.AppendItem(cl, 'Java')
             self.tree.AppendItem(cl, 'C++')'''
 
-    def makeEqualsStatistics(self, funcName, expected, actual, lineNumber, name, status):
+    def makeEqualsStatistics(self, funcName, expected, expectedType, actual, actualType, lineNumber, name, status, failMensage):
         self.sizer_8.Clear(True)
         
         self.func = wx.StaticText(self.panel_2, -1, "Método: " + str(funcName))
+        self.func.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         self.type = wx.StaticText(self.panel_2, -1, "\nTipo: " + str(name))
-        self.status = wx.StaticText(self.panel_2, -1, "\n\nEstado: " + str(status))
+        self.type.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        if(status == True):
+            self.status = wx.StaticText(self.panel_2, -1, "\n\nEstado: Passou")
+            self.status.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+            self.status.SetForegroundColour((0,128,0))
+        else:
+            self.status = wx.StaticText(self.panel_2, -1, "\n\nEstado: Falhou")
+            self.status.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans")) 
+            self.status.SetForegroundColour((255,0,0))
+        
+        self.expected = wx.StaticText(self.panel_2, -1, "\n\n\nValor Esperado: " + str(expected))
+        self.expected.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        self.expectedType = wx.StaticText(self.panel_2, -1, "\n\n\n\nValor Esperado Tipo:\n" + str(expectedType))
+        self.expectedType.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        
+        self.actual = wx.StaticText(self.panel_2, -1, "\n\n\n\n\n\n\nValor Actual: " + str(actual))
+        self.actual.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        self.actualType = wx.StaticText(self.panel_2, -1, "\n\n\n\n\n\n\n\nValor Actual Tipo:\n" + str(actualType))
+        self.actualType.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        
+        
+        self.lineNumber = wx.StaticText(self.panel_2, -1, "\n\n\n\n\n\n\n\n\n\n\nNumero da linha:" + str(lineNumber))
+        self.lineNumber.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        self.mensage = wx.StaticText(self.panel_2, -1, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMensagem:\n" + str(failMensage))
+        self.mensage.SetFont(wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
         
         self.sizer_8.Add(self.func, 0, 0, 0)
         self.sizer_8.Add(self.type, 0, 0, 0)
         self.sizer_8.Add(self.status, 0, 0, 0)
+        self.sizer_8.Add(self.expected, 0, 0, 0)
+        self.sizer_8.Add(self.expectedType, 0, 0, 0)
+        self.sizer_8.Add(self.actual, 0, 0, 0)
+        self.sizer_8.Add(self.actualType, 0, 0, 0)
+        self.sizer_8.Add(self.lineNumber, 0, 0, 0)
+        self.sizer_8.Add(self.mensage, 0, 0, 0)
         
         #self.button_1 = wx.Button(self.panel_2, -1, "Sair")
         #self.sizer_8.Add(self.button_1, 0, wx.EXPAND, 0)
@@ -161,7 +194,67 @@ class PyUnitiABCP(wx.Frame):
         
         self.Show()
         pass
-    def makeTrueFalseStatistics(self, funcName, condition, lineNumber, name, status):
+    def makeTrueFalseStatistics(self, funcName, condition, lineNumber, name, status, mensage):
+        self.sizer_8.Clear(True)
+        
+        self.func = wx.StaticText(self.panel_2, -1, "Método: " + str(funcName))
+        self.func.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        self.type = wx.StaticText(self.panel_2, -1, "\nTipo: " + str(name))
+        self.type.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        if(status == True):
+            self.status = wx.StaticText(self.panel_2, -1, "\n\nEstado: Passou")
+            self.status.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+            self.status.SetForegroundColour((0,128,0))
+         
+        else:
+            self.status = wx.StaticText(self.panel_2, -1, "\n\nEstado: Falhou")
+            self.status.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+            self.status.SetForegroundColour((255,0,0))
+            
+        self.condition = wx.StaticText(self.panel_2, -1, "\n\n\nCondição: " + str(condition))
+        self.condition.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        self.lineNumber = wx.StaticText(self.panel_2, -1, "\n\n\n\nNumero da linha: " + str(lineNumber))
+        self.lineNumber.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        
+        self.mensage = wx.StaticText(self.panel_2, -1, "\n\n\n\n\n\n\nNumero da linha:\n" + str(mensage))
+        self.mensage.SetFont(wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        
+        self.sizer_8.Add(self.func, 0, 0, 0)
+        self.sizer_8.Add(self.type, 0, 0, 0)
+        self.sizer_8.Add(self.status, 0, 0, 0)
+        self.sizer_8.Add(self.condition, 0, 0, 0)
+        self.sizer_8.Add(self.lineNumber, 0, 0, 0)
+        self.sizer_8.Add(self.mensage, 0, 0, 0)
+        
+        #self.button_1 = wx.Button(self.panel_2, -1, "Sair")
+        #self.sizer_8.Add(self.button_1, 0, wx.EXPAND, 0)
+        #self.panel_2.SetSizer(self.sizer_8)
+        self.panel_2.SetSizer(self.sizer_8)
+        
+        self.Show()
+        pass
+    
+    def makeMethodStatistics(self, funcName, status):
+        self.sizer_8.Clear(True)
+         
+        self.func = wx.StaticText(self.panel_2, -1, "Método: " + str(funcName))
+        self.func.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+        if(status == 0):
+            self.status = wx.StaticText(self.panel_2, -1, "\nEstado: Passou")
+            self.status.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans"))
+            self.status.SetForegroundColour((0,128,0))
+            
+        else:
+            self.status = wx.StaticText(self.panel_2, -1, "\nEstado: Falhou")
+            self.status.SetFont(wx.Font(13, wx.DEFAULT, wx.NORMAL, wx.NORMAL, 0, "Sans")) 
+            self.status.SetForegroundColour((255,0,0))
+        self.sizer_8.Add(self.status, 0, 0, 0)
+        self.sizer_8.Add(self.func, 0, 0, 0)
+        
+        self.panel_2.SetSizer(self.sizer_8)
+        
+        self.Show()
+        
         pass
         
     def removeTreeElements(self):
@@ -177,12 +270,14 @@ class PyUnitiABCP(wx.Frame):
     def getAllMethodsCheckBox(self):
         return self.all_metodos_box
         pass
-    def setMethodsList(self, listMethods, check_Method, start_test, selChanged):
+    def setMethodsList(self, listMethods, check_Method, start_test, selChanged, exitEvent):
         
         self.listMethods = listMethods
         self.__do_layout(check_Method)
         self.Bind(wx.EVT_BUTTON, start_test, self.button_5)
         self.Bind(wx.EVT_TREE_SEL_CHANGED, selChanged, self.tree)
+        self.Bind(wx.EVT_BUTTON, exitEvent, self.button_6)
+        self.Bind(wx.EVT_CLOSE, exitEvent, self)
         
         pass
     
