@@ -12,7 +12,7 @@ import wx
 
 
 
-isTest = False
+
 #failsListPossition = 0
 '''
 def addFile(file):
@@ -38,7 +38,11 @@ def getFails():
     return failsList'''
 
 
- 
+'''
+Classe responsavel por tratar todos os testes
+e intrepertar a informação passada pelo utilizador
+bem como enviar informação para a interface gráfica
+''' 
 class PyUniti(object):
     
     #global ola
@@ -47,9 +51,16 @@ class PyUniti(object):
     failsListPosition = 0
     methodsList = []
     #beginTest(classObject)
-    
+    '''
+    Classe responsavel pelo decorator que se introduz 
+    no inicio de cada método
+    para indicar que o mesmo é de teste
+    '''
     class Test(object):
     
+        '''
+        Adiciona os métodos a uma lista
+        '''
         def __init__(self, function):
             self.function = function
             #print "fazer Teste"
@@ -69,7 +80,9 @@ class PyUniti(object):
             PyUniti.failsListPosition += 1
             pass'''
         
-    
+    ''' Construtir da classe principal onde é inicizalida 
+    uma instancia da interface gráfica
+    '''
     def __init__(self):
         #print "possst"
         #self.failsList = []
@@ -101,6 +114,10 @@ class PyUniti(object):
         #print "Teste linha", PyUniti.failsList[1].getTestList()[0].getLineNumber()
         
         pass
+    '''
+    Verfica se a checboz está selecionada ou não quando
+    clicada
+    '''
     def check_Method(self, event):  # wxGlade: PyUnitiABCP.<event_handler>
         
         
@@ -108,7 +125,11 @@ class PyUniti(object):
             self.frame_1.getAllMethodsCheckBox().SetValue(False)
             
         event.Skip()
-        
+    
+    '''
+    Função responsavel pelo inicio do
+    teste as funções seleciondas na interface gráfica
+    '''    
     def start_Test(self, event):  # wxGlade: PyUnitiABCP.<event_handler>
     
         PyUniti.failsList = []
@@ -129,56 +150,63 @@ class PyUniti(object):
                 
         
         event.Skip()
-        
+    '''
+    Trata do envento de saida do programa
+    '''    
     def exitProgram(self, event):  # wxGlade: PyUnitiABCP.<event_handler>
         if wx.MessageBox("Deseja sair do programa?", "Confirmar", wx.YES_NO) == wx.YES :
             #print "sair"
             exit(0)
             pass
         #event.Skip()
-            
+    '''
+    Tarata dos eventos dos nós da árvore
+    '''        
     def selChanged(self, event):  # wxGlade: PyUnitiABCP.<event_handler>
         item =  event.GetItem()
         parent = self.frame_1.getTree().GetItemParent(item)
         
         teste = self.frame_1.getTree().GetPyData(item)
         classe = self.frame_1.getTree().GetPyData(parent)
-        
-        if classe == None:
-            isFail = 0
-            for testes in teste.getTestList():
-                if testes.getStatus() == False:
-                    isFail += 1
-                    
-            
-            self.frame_1.makeMethodStatistics(teste.getFunctionName(), isFail)
-            
-            
-        elif teste.getType() == 2:
-            self.frame_1.makeEqualsStatistics(classe.getFunctionName(), teste.getExpected(), teste.getExpectedType(), teste.getActual(), teste.getActualType(), teste.getLineNumber(), teste.getName(), teste.getStatus(), teste.getFailMensage())
-        elif teste.getType() == 3:
-            self.frame_1.makeTrueFalseStatistics(classe.getFunctionName(), teste.getCondition(), teste.getLineNumber(), teste.getName(), teste.getStatus(), teste.getFailMensage())    
-        
+        print self.frame_1.getTree().ItemHasChildren(item)
+        if parent != None:
+            if classe == None:
+                isFail = 0
+                for testes in teste.getTestList():
+                    if testes.getStatus() == False:
+                        isFail += 1
+                        
+                
+                self.frame_1.makeMethodStatistics(teste.getFunctionName(), isFail)
+                
+                
+            elif teste.getType() == 2:
+                self.frame_1.makeEqualsStatistics(classe.getFunctionName(), teste.getExpected(), teste.getExpectedType(), teste.getActual(), teste.getActualType(), teste.getLineNumber(), teste.getName(), teste.getStatus(), teste.getFailMensage())
+            elif teste.getType() == 3:
+                self.frame_1.makeTrueFalseStatistics(classe.getFunctionName(), teste.getCondition(), teste.getLineNumber(), teste.getName(), teste.getStatus(), teste.getFailMensage())    
+    '''
+    Devolve a lista de testes
+    '''    
     def get_failList(self):
         return self.failsList
         pass
     
-    @staticmethod
-    def set_failList():
-        #global ola
-        #print "OLa sou set", PyUniti.ola
-        pass
     
-    def beginTest(self, classObject ):
+    '''def beginTest(self, classObject ):
         for name in dir(classObject):
             attribute = getattr(classObject, name)
             if ismethod(attribute):
                 PyUniti.methodsList.append(attribute)
                 attribute()
-                #print "nada"
+                print "nada"'''
                 
-                
+    '''
+    Sub classe responsavel por guardar informação de cada  método
+    '''            
     class TestStatus():
+        '''
+        define a lista de testes e guarda o nome da função
+        '''
         def __init__(self, functionName):
             self.testList = []
             self.functionName = functionName
@@ -242,7 +270,61 @@ class PyUniti(object):
             PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertFalsePy(condition, lineNumber, status, mensage))
             #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
             pass
-            
+        '''
+        AssertNotNullPy
+        '''
+        @staticmethod    
+        def assertNotNullPy(condition):
+            mensage = ""
+            status = False
+            lineNumber = None
+            #if isTest == True:
+            if condition == None:
+                mensage += "A variavel é Nula"
+                #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                lineNumber = inspect.currentframe().f_back.f_lineno
+                status = False
+                
+            else:
+                mensage += "A variavél não é Nula"
+                #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                lineNumber = inspect.currentframe().f_back.f_lineno
+                status = True
+                
+            pass
+       
+            #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
+            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertNotNullPy(condition, lineNumber, status, mensage))
+            #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
+            pass
+        
+        '''
+        AssertNullPy
+        '''
+        @staticmethod    
+        def assertNullPy(condition):
+            mensage = ""
+            status = False
+            lineNumber = None
+            #if isTest == True:
+            if condition == None:
+                mensage += "A variavel é Nula"
+                #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                lineNumber = inspect.currentframe().f_back.f_lineno
+                status = True
+                
+            else:
+                mensage += "A variavél não é Nula"
+                #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                lineNumber = inspect.currentframe().f_back.f_lineno
+                status = False
+                
+            pass
+       
+            #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
+            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertNullPy(condition, lineNumber, status, mensage))
+            #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
+            pass       
         '''
         AssertTruePy
         '''
@@ -302,7 +384,7 @@ class PyUniti(object):
                 mensage += "O tipo das variáveis inseridas não é igual"
                 lineNumber = inspect.currentframe().f_back.f_lineno
                 #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                #status = False
+                status = False
             else:
                 if expected == actual:
                     mensage += "O Valor do AssertEqualsPY está correcto"
@@ -314,26 +396,82 @@ class PyUniti(object):
                     lineNumber = inspect.currentframe().f_back.f_lineno
                     #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                     status = False
-                        
-            
-                
-                #global failsList
-                #PyUniti.set_failList()
-                #PyUniti.failsList[PyUniti.failsListPossition].addTest(PyUniti.AssertEqualsPy(expected, actual, lineNumber, status))
-            #else:
-        
-                #print "não é teeste"
-             
-                #mensage += "Não se verifica um teste (@Test)"
-                #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
-                #pass
-            
+    
             #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
             PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertEqualsPy(expected, actual, expectedType, actualType, lineNumber, status, mensage))
             #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
             
             pass
+        '''
+        AssertNotSamePy
+        '''
+        @staticmethod
+        def assertNotSamePy(expected, actual):
+            mensage = ""
+            expectedType = str(type(expected))
+            actualType = str(type(actual))
+            status = False
+            lineNumber = None
+            #if isTest == True:
+            if not type(expected) == type(actual):
+                mensage += "O tipo das variáveis inseridas não é igual"
+                lineNumber = inspect.currentframe().f_back.f_lineno
+                #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                status = True
+            else:
+                if expected is actual:
+                    mensage += "O Valor do AssertEqualsPY está correcto"
+                    lineNumber = inspect.currentframe().f_back.f_lineno
+                    #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                    status = False
+                else:
+                    mensage += "O Valor do AssertEqualsPY está errado"
+                    lineNumber = inspect.currentframe().f_back.f_lineno
+                    #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                    status = True
+    
+            #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
+            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertNotSamePy(expected, actual, expectedType, actualType, lineNumber, status, mensage))
+            #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
             
+            pass
+        
+        '''
+        AssertSamePy
+        '''
+        @staticmethod
+        def assertSamePy(expected, actual):
+            mensage = ""
+            expectedType = str(type(expected))
+            actualType = str(type(actual))
+            status = False
+            lineNumber = None
+            #if isTest == True:
+            if not type(expected) == type(actual):
+                mensage += "O tipo das variáveis inseridas não é igual"
+                lineNumber = inspect.currentframe().f_back.f_lineno
+                #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                status = False
+            else:
+                if expected is actual:
+                    mensage += "O valor esperado <" + str(expected) + "> e o valor actual <" + str(actual) + "> referem-se ao mesmo objecto"
+                    lineNumber = inspect.currentframe().f_back.f_lineno
+                    #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                    status = True
+                else:
+                    mensage += "O Valor do AssertEqualsPY está errado"
+                    lineNumber = inspect.currentframe().f_back.f_lineno
+                    #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
+                    status = False
+    
+            #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
+            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertSamePy(expected, actual, expectedType, actualType, lineNumber, status, mensage))
+            #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
+            
+            pass
+        ############################################################################
+        ############################################################################
+                
         class AssertEqualsPy(object):
     
             def __init__(self, expected, actual, expectedType, actualType, lineNumber, status, failMensage):
@@ -344,6 +482,112 @@ class PyUniti(object):
                 self.lineNumber = lineNumber
                 self.status = status
                 self.name = "AssertEquals"
+                self.failMensage = failMensage
+                
+            
+            def getFailMensage(self):
+                #print self.failMensage
+                return self.failMensage
+                pass
+            
+            def getExpectedType(self):
+                return self.expectedType
+                pass
+            
+            def getActualType(self):
+                return self.actualType
+                pass
+            
+            def getType(self):
+                return 2
+                pass
+            def getName(self):
+                return self.name
+                pass
+                
+            def getActual(self):
+                
+                return self.actual
+            
+            def getExpected(self):
+                
+                return self.expected
+            
+            def getLineNumber(self):
+                
+                return self.lineNumber
+                pass
+            
+            def getStatus(self):
+                
+                return self.status
+                pass
+            
+            pass
+        
+        class AssertNotSamePy(object):
+    
+            def __init__(self, expected, actual, expectedType, actualType, lineNumber, status, failMensage):
+                self.expected = expected
+                self.actual = actual
+                self.expectedType = expectedType
+                self.actualType = actualType
+                self.lineNumber = lineNumber
+                self.status = status
+                self.name = "AssertNotSame"
+                self.failMensage = failMensage
+                
+            
+            def getFailMensage(self):
+                #print self.failMensage
+                return self.failMensage
+                pass
+            
+            def getExpectedType(self):
+                return self.expectedType
+                pass
+            
+            def getActualType(self):
+                return self.actualType
+                pass
+            
+            def getType(self):
+                return 2
+                pass
+            def getName(self):
+                return self.name
+                pass
+                
+            def getActual(self):
+                
+                return self.actual
+            
+            def getExpected(self):
+                
+                return self.expected
+            
+            def getLineNumber(self):
+                
+                return self.lineNumber
+                pass
+            
+            def getStatus(self):
+                
+                return self.status
+                pass
+            
+            pass
+        
+        class AssertSamePy(object):
+    
+            def __init__(self, expected, actual, expectedType, actualType, lineNumber, status, failMensage):
+                self.expected = expected
+                self.actual = actual
+                self.expectedType = expectedType
+                self.actualType = actualType
+                self.lineNumber = lineNumber
+                self.status = status
+                self.name = "AssertSame"
                 self.failMensage = failMensage
                 
             
@@ -445,6 +689,80 @@ class PyUniti(object):
                 return self.name
                 pass
                 
+                
+            def getCondition(self):
+                
+                return self.condition
+            
+            def getLineNumber(self):
+                
+                return self.lineNumber
+            
+            def getStatus(self):
+                
+                return self.status
+            
+            
+            pass
+        
+        class AssertNotNullPy(object):
+    
+            def __init__(self, condition, lineNumber, status, failMensage):
+                self.condition = condition
+                self.lineNumber = lineNumber
+                self.status = status
+                self.name = "AssertNotNull"
+                self.failMensage = failMensage
+            
+            def getFailMensage(self):
+                
+                return self.failMensage
+                pass
+            
+            def getType(self):
+                return 3
+                pass
+            
+            def getName(self):
+                return self.name
+                pass
+                
+            def getCondition(self):
+                
+                return self.condition
+            
+            def getLineNumber(self):
+                
+                return self.lineNumber
+            
+            def getStatus(self):
+                
+                return self.status
+            
+            
+            pass
+        
+        class AssertNullPy(object):
+    
+            def __init__(self, condition, lineNumber, status, failMensage):
+                self.condition = condition
+                self.lineNumber = lineNumber
+                self.status = status
+                self.name = "AssertNull"
+                self.failMensage = failMensage
+            
+            def getFailMensage(self):
+                
+                return self.failMensage
+                pass
+            
+            def getType(self):
+                return 3
+                pass
+            
+            def getName(self):
+                return self.name
+                pass
                 
             def getCondition(self):
                 
