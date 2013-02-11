@@ -211,23 +211,40 @@ class PyUniti(object):
             self.testList = []
             self.functionName = functionName
         
+        '''classifica a classe com um tipo
+        '''
         def getType(self):
                 return 1
                 pass
-                
+        '''
+        adiciona os testes
+        presentes na funmção a lista de testes
+        '''
         def addTest(self, test):
             self.testList.append(test)
-            
+        '''
+        Adiciona o nome da função
+        '''    
         def addFunctionName(self, functionName):
             self.functionName = functionName
             pass
+        '''
+        Retorna o nome da função
+        '''
         def getFunctionName(self):
             return self.functionName
             pass
+        '''
+        Retorna a lista de testes
+        '''
         def getTestList(self):
             
             return self.testList
     
+    '''
+    Subclasse onde tem os métodos estáticos de teste
+    que serão chamados pelo utilzador
+    '''
     class UnitiTests(object):
         
         '''
@@ -387,12 +404,12 @@ class PyUniti(object):
                 status = False
             else:
                 if expected == actual:
-                    mensage += "O Valor do AssertEqualsPY está correcto"
+                    mensage += "O Valor esperado «" + str(expected) +"» é igual ao valor atual «" + str(actual) + "»"
                     lineNumber = inspect.currentframe().f_back.f_lineno
                     #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                     status = True
                 else:
-                    mensage += "O Valor do AssertEqualsPY está errado"
+                    mensage += "O Valor esperado «" + str(expected) +"» não é igual ao valor atual «" + str(actual) + "»"
                     lineNumber = inspect.currentframe().f_back.f_lineno
                     #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                     status = False
@@ -406,32 +423,32 @@ class PyUniti(object):
         AssertNotSamePy
         '''
         @staticmethod
-        def assertNotSamePy(expected, actual):
+        def assertNotSamePy(unexpected, actual):
             mensage = ""
-            expectedType = str(type(expected))
+            expectedType = str(type(unexpected))
             actualType = str(type(actual))
             status = False
             lineNumber = None
             #if isTest == True:
-            if not type(expected) == type(actual):
+            if not type(unexpected) == type(actual):
                 mensage += "O tipo das variáveis inseridas não é igual"
                 lineNumber = inspect.currentframe().f_back.f_lineno
                 #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                 status = True
             else:
-                if expected is actual:
-                    mensage += "O Valor do AssertEqualsPY está correcto"
+                if unexpected is actual:
+                    mensage += "O Valor não esperado «" + str(unexpected) +"» não se refere ao mesmo objecto que o valor atual «" + str(actual) + "»"
                     lineNumber = inspect.currentframe().f_back.f_lineno
                     #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                     status = False
                 else:
-                    mensage += "O Valor do AssertEqualsPY está errado"
+                    mensage += "O Valor não esperado «" + str(unexpected) +"» refere-se ao mesmo objecto que o valor atual «" + str(actual) + "»"
                     lineNumber = inspect.currentframe().f_back.f_lineno
                     #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                     status = True
     
             #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
-            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertNotSamePy(expected, actual, expectedType, actualType, lineNumber, status, mensage))
+            PyUniti.failsList[PyUniti.failsListPosition].addTest(PyUniti.UnitiTests.AssertNotSamePy(unexpected, actual, expectedType, actualType, lineNumber, status, mensage))
             #print "oaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PyUniti.failsListPosition
             
             pass
@@ -459,7 +476,7 @@ class PyUniti(object):
                     #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                     status = True
                 else:
-                    mensage += "O Valor do AssertEqualsPY está errado"
+                    mensage += "O Valor esperado «" + str(expected) +"» não se refere ao mesmo objecto que o valor atual «" + str(actual) + "»"
                     lineNumber = inspect.currentframe().f_back.f_lineno
                     #print mensage, " na linha: ", inspect.currentframe().f_back.f_lineno
                     status = False
@@ -471,9 +488,15 @@ class PyUniti(object):
             pass
         ############################################################################
         ############################################################################
-                
+        '''
+        Classe que guarda informação 
+        sobre o assertEquals
+        '''        
         class AssertEqualsPy(object):
     
+            '''
+            Construtor onde são adiconados todos os elementes que constituem este eteste
+            '''
             def __init__(self, expected, actual, expectedType, actualType, lineNumber, status, failMensage):
                 self.expected = expected
                 self.actual = actual
@@ -484,49 +507,77 @@ class PyUniti(object):
                 self.name = "AssertEquals"
                 self.failMensage = failMensage
                 
-            
+            '''
+            Retorna a mensagem
+            de errro
+            '''
             def getFailMensage(self):
                 #print self.failMensage
                 return self.failMensage
                 pass
-            
+           
+            '''
+            retorna o tipo valor esperado
+            '''
             def getExpectedType(self):
                 return self.expectedType
                 pass
-            
+            '''
+            retorna o tipo valor actual
+            '''
             def getActualType(self):
                 return self.actualType
                 pass
-            
+            '''
+            retorna o tipo da classe para efeitos de controlo
+            '''
             def getType(self):
                 return 2
                 pass
+            '''
+            retorna o nome da classe de teste
+            '''
             def getName(self):
                 return self.name
                 pass
-                
+            '''
+            retorna no valor
+            actual
+            '''
             def getActual(self):
                 
                 return self.actual
-            
+            '''
+            retorna o valor esperado
+            '''
             def getExpected(self):
                 
                 return self.expected
-            
+            '''
+            retorna o numero da linha do teste
+            '''
             def getLineNumber(self):
                 
                 return self.lineNumber
                 pass
-            
+            '''
+            devolve o estado
+            se passou ou não o teste
+            '''
             def getStatus(self):
                 
                 return self.status
                 pass
             
             pass
-        
+        '''
+        Classe que guarda informação 
+        sobre o AssertNotSamePy
+        '''      
         class AssertNotSamePy(object):
-    
+            '''
+            Construtor onde são adiconados todos os elementes que constituem este eteste
+            '''
             def __init__(self, expected, actual, expectedType, actualType, lineNumber, status, failMensage):
                 self.expected = expected
                 self.actual = actual
@@ -537,40 +588,67 @@ class PyUniti(object):
                 self.name = "AssertNotSame"
                 self.failMensage = failMensage
                 
-            
+            '''
+            Retorna a mensagem
+            de errro
+            '''
             def getFailMensage(self):
                 #print self.failMensage
                 return self.failMensage
                 pass
-            
+           
+            '''
+            retorna o tipo valor esperado
+            '''
             def getExpectedType(self):
                 return self.expectedType
                 pass
-            
+            '''
+            retorna o tipo valor actual
+            '''
             def getActualType(self):
                 return self.actualType
                 pass
-            
+            '''
+            retorna o tipo da classe para efeitos de controlo
+            '''
             def getType(self):
                 return 2
                 pass
+            '''
+            retorna o nome da classe de teste
+            '''
             def getName(self):
                 return self.name
                 pass
                 
+            '''
+            retorna no valor
+            actual
+            '''
             def getActual(self):
                 
                 return self.actual
             
+            '''
+            retorna o valor esperado
+            '''
             def getExpected(self):
                 
                 return self.expected
             
+            '''
+            retorna o numero da linha do teste
+            '''
             def getLineNumber(self):
                 
                 return self.lineNumber
                 pass
             
+            '''
+            devolve o estado
+            se passou ou não o teste
+            '''
             def getStatus(self):
                 
                 return self.status
@@ -591,39 +669,70 @@ class PyUniti(object):
                 self.failMensage = failMensage
                 
             
+            '''
+            Retorna a mensagem
+            de errro
+            '''
             def getFailMensage(self):
                 #print self.failMensage
                 return self.failMensage
                 pass
             
+            
+            '''
+            retorna o tipo valor esperado
+            '''
             def getExpectedType(self):
                 return self.expectedType
                 pass
             
+            '''
+            retorna o tipo valor actual
+            '''
             def getActualType(self):
                 return self.actualType
                 pass
             
+            '''
+            retorna o tipo da classe para efeitos de controlo
+            '''
             def getType(self):
                 return 2
                 pass
+            '''
+            retorna o nome da classe de teste
+            '''
             def getName(self):
                 return self.name
                 pass
                 
+            '''
+            retorna no valor
+            actual
+            '''
             def getActual(self):
                 
                 return self.actual
             
+            '''
+            retorna o valor esperado
+            '''
             def getExpected(self):
                 
                 return self.expected
             
+            '''
+            retorna o numero da linha do teste
+            '''
             def getLineNumber(self):
                 
                 return self.lineNumber
                 pass
             
+            '''
+            devolve o estado
+            se passou ou não o teste
+            '''
             def getStatus(self):
                 
                 return self.status
@@ -640,27 +749,46 @@ class PyUniti(object):
                 self.name = "AssertTrue"
                 self.failMensage = failMensage
             
+            '''
+            Retorna a mensagem
+            de errro
+            '''
             def getFailMensage(self):
                 
                 return self.failMensage
                 pass
             
+            '''
+            retorna o tipo da classe para efeitos de controlo
+            '''
             def getType(self):
                 return 3
                 pass
             
+            '''
+            retorna o nome da classe de teste
+            '''
             def getName(self):
                 return self.name
                 pass
-                
+            '''
+            retorna a condição
+            '''    
             def getCondition(self):
                 
                 return self.condition
             
+            '''
+            retorna o numero da linha do teste
+            '''
             def getLineNumber(self):
                 
                 return self.lineNumber
             
+            '''
+            devolve o estado
+            se passou ou não o teste
+            '''
             def getStatus(self):
                 
                 return self.status
@@ -677,27 +805,46 @@ class PyUniti(object):
                 self.name = "AssertFalse"
                 self.failMensage = failMensage
             
+            '''
+            Retorna a mensagem
+            de errro
+            '''
             def getFailMensage(self):
                 
                 return self.failMensage
                 pass
+            '''
+            retorna o tipo da classe para efeitos de controlo
+            '''
             def getType(self):
                 return 3
                 pass
             
+            '''
+            retorna o nome da classe de teste
+            '''
             def getName(self):
                 return self.name
                 pass
                 
-                
+            '''
+            retorna a condição
+            '''      
             def getCondition(self):
                 
                 return self.condition
             
+            '''
+            retorna o numero da linha do teste
+            '''
             def getLineNumber(self):
                 
                 return self.lineNumber
             
+            '''
+            devolve o estado
+            se passou ou não o teste
+            '''
             def getStatus(self):
                 
                 return self.status
@@ -714,27 +861,46 @@ class PyUniti(object):
                 self.name = "AssertNotNull"
                 self.failMensage = failMensage
             
+            '''
+            Retorna a mensagem
+            de errro
+            '''
             def getFailMensage(self):
                 
                 return self.failMensage
                 pass
             
+            '''
+            retorna o tipo da classe para efeitos de controlo
+            '''
             def getType(self):
                 return 3
                 pass
             
+            '''
+            retorna o nome da classe de teste
+            '''
             def getName(self):
                 return self.name
                 pass
-                
+            '''
+            retorna a condição
+            '''      
             def getCondition(self):
                 
                 return self.condition
             
+            '''
+            retorna o numero da linha do teste
+            '''
             def getLineNumber(self):
                 
                 return self.lineNumber
             
+            '''
+            devolve o estado
+            se passou ou não o teste
+            '''
             def getStatus(self):
                 
                 return self.status
@@ -751,27 +917,46 @@ class PyUniti(object):
                 self.name = "AssertNull"
                 self.failMensage = failMensage
             
+            '''
+            Retorna a mensagem
+            de errro
+            '''
             def getFailMensage(self):
                 
                 return self.failMensage
                 pass
             
+            '''
+            retorna o tipo da classe para efeitos de controlo
+            '''
             def getType(self):
                 return 3
                 pass
             
+            '''
+            retorna o nome da classe de teste
+            '''
             def getName(self):
                 return self.name
                 pass
-                
+            '''
+            retorna a condição
+            '''      
             def getCondition(self):
                 
                 return self.condition
             
+            '''
+            retorna o numero da linha do teste
+            '''
             def getLineNumber(self):
                 
                 return self.lineNumber
             
+            '''
+            devolve o estado
+            se passou ou não o teste
+            '''
             def getStatus(self):
                 
                 return self.status
