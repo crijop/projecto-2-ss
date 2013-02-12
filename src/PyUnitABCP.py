@@ -90,7 +90,7 @@ class PyUniti(object):
         #self.beginTest(classObject)
         app = wx.PySimpleApp(0)
         wx.InitAllImageHandlers()
-        self.frame_1 = PyUnitiABCP(None, -1, "")
+        self.frame_1 = PyUniti_Interface(None, -1, "")
         app.SetTopWindow(self.frame_1)
      
         self.frame_1.Show()

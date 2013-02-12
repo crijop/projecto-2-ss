@@ -12,7 +12,7 @@ import wx
 Classe responsavel por apsentar os resultados
 numa janela.
 '''
-class PyUnitiABCP(wx.Frame):
+class PyUniti_Interface(wx.Frame):
     '''
     É carregada a interface gráfica em WXpython
     '''
@@ -355,14 +355,6 @@ class PyUnitiABCP(wx.Frame):
         event.Skip()
 
     
-
-
-    '''
-    Sai do programa
-    '''
-    def exitProgram(self, event):  # wxGlade: PyUnitiABCP.<event_handler>
-        print "Event handler `exitProgram' not implemented"
-        event.Skip()
 
 # end of class PyUnitiABCP
 '''if __name__ == "__main__":
